@@ -1,23 +1,21 @@
 import { serviceRegister, serviceLogin } from "../services/public.service.js"
 import { createError } from "../utils/createError.js"
 
-export function register(req, res, next) {
+export async function register(req, res, next) {
 	try {
-		const user = req.body
-		console.log(user)
-		const response = serviceRegister()
-		res.status(200).json({ message: response })
+		const { firstName, lastName, username, password } = req.body
+		await serviceRegister(firstName, lastName, username, password)
+		res.status(200).json({ message: "SUCCESS" })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function login(req, res, next) {
+export async function login(req, res, next) {
 	try {
-		const user = req.body
-		console.log(user)
-		const response = serviceLogin()
-		res.status(200).json({ message: response })
+		const { username, password } = req.body
+		const response = await serviceLogin(username, password)
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}

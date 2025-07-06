@@ -1,13 +1,20 @@
 import prisma from "../config/prisma.js"
 
-export function serviceGetAllIngredient() {
-	return "service get all ingredient"
+export async function serviceGetAllIngredient() {
+	const result = await prisma.ingredient.findMany()
+	return result
 }
 
-export function serviceGetIngredientById(id) {
-	return `service get ingredient ${id}`
+export async function serviceGetIngredientById(id) {
+	const result = await prisma.ingredient.findUnique({
+		where: { id }
+	})
+	return result
 }
 
-export function serviceSearchIngredient(name) {
-	return `search ingredient ${name}`
+export async function serviceSearchIngredient(name) {
+	const result = await prisma.ingredient.findMany({
+		where: { name: { startsWith: name } }
+	})
+	return result
 }

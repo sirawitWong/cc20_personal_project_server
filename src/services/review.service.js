@@ -1,17 +1,41 @@
 import prisma from "../config/prisma.js"
+import { createError } from "../utils/createError.js"
 
-export function serviceGetReviewById(id) {
-	return `service get review by id ${id}`
+export async function serviceGetReviewById(id) {
+	const result = await prisma.review.findUnique({
+		where: { id }
+	})
+	return result
 }
 
-export function serviceCreateReview() {
-	return "create review"
+export async function serviceCreateReview(data) {
+	const result = await prisma.review.create({ data })
+	return result
 }
 
-export function serviceEditReview() {
-	return "edit review"
+export async function serviceEditReview(id, data) {
+	const isExist = await prisma.review.findUnique({
+		where: { id }
+	})
+	if (!isExist) {
+		return createError(400, "review doesn't exist")
+	}
+	const result = await prisma.review.update({
+		where: { id },
+		data
+	})
+	return result
 }
 
-export function serviceDeleteReview(id) {
-	return `delete review ${id}`
+export async function serviceDeleteReview(id) {
+	const isExist = await prisma.review.findUnique({
+		where: { id }
+	})
+	if (!isExist) {
+		return createError(400, "review doesn't exist")
+	}
+	await prisma.review.delete({
+		where: { id }
+	})
+	return `Review id: ${id} DELETED`
 }    

@@ -1,25 +1,73 @@
 import prisma from "../config/prisma.js";
+import { createError } from "../utils/createError.js";
 
-export function serviceGetAllRecipies() {
-	return "get all recipies"
+export async function serviceGetAllRecipies() {
+	const result = await prisma.recipe.findMany()
+	return result
 }
 
-export function serviceGetRecipeById(id) {
-	return `get recipe by id ${id}`
+export async function serviceGetRecipeById(id) {
+	const result = await prisma.recipe.findUnique({
+		where: { id }
+	})
+	return result
 }
 
-export function serviceSearchRecipe(name, category) {
-	return `search recipe ${name}, ${category}`
+export async function serviceSearchRecipe(name, category) {
+	if (name && !category) {
+		const result = await prisma.recipe.findMany({
+			where: { name: { contains: name } }
+		})
+
+		return result
+	} else if (!name && category) {
+		const result = await prisma.recipe.findMany({
+			where: { category: category }
+		})
+		return result
+	} else {
+		const result = await prisma.recipe.findMany({
+			where: {
+				AND: [{ name: { contains: name } }, { category: category }]
+			}
+		})
+		return result
+	}
 }
 
-export function serviceDeleteRecipe(id) {
-	return `delete recipe ${id}`
+// later
+export async function serviceCreateRecipe() {
+	return `create recipe `
 }
 
-export function serviceEditRecipe(id) {
-	return `edit recipe ${id}`
+export async function serviceDeleteRecipe(id, user) {
+	const isExist = await prisma.recipe.findUnique({
+		where: { id }
+	})
+	if (!isExist) {
+		createError(400, "this recipe doesn't exist")
+	}
+	await prisma.recipe.delete({
+		where: { id }
+	})
+	return `Recipe id: ${id} DELETED`
 }
 
-export function serviceGetRecipeReview() {
-	return "get recipe reviews"
+// later
+export async function serviceEditRecipe(id, user, data) {
+	const isExist = await prisma.recipe.findUnique({
+		where: { id }
+	})
+	if (!isExist) {
+		createError(400, "this recipe doesn't exist")
+	}
+	const result = data
+	return result
+}
+
+export async function serviceGetRecipeReview(id) {
+	const recipe = await prisma.recipe.findUnique({
+		where: { id }
+	})
+	return recipe
 }

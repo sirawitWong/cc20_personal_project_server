@@ -7,104 +7,158 @@ import {
 	serviceDeleteUser,
 	serviceEditEquipment,
 	serviceEditIngredient,
-	serviceEditUserRole,
+	//serviceEditUserRole,
 	serviceRegisterAdmin
 } from "../services/auth.admin.service.js";
 
 import { createError } from "../utils/createError.js";
 
-export function registerAdmin(req, res, next) {
+export async function registerAdmin(req, res, next) {
 	try {
-		const response = serviceRegisterAdmin()
-		res.status(200).json({ message: response })
+		const user = req.user
+		if (user.role !== "SUPER") {
+			createError(403, "only super can do this")
+		}
+		const { firstName, lastName, username, password } = req.body
+		const response = await serviceRegisterAdmin(firstName, lastName, username, password)
+		res.status(200).json({ result: "SUCCESS" })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function editUserRole(req, res, next) {
+//export async function editUserRole(req, res, next) {
+//	try {
+//		const user = req.user
+//if (user.role !== "SUPER") {
+//	createError(403, "only super can do this")
+//}
+//		const body = req.body
+//		console.log(body)
+//		const { id } = req.params
+//		const response = await serviceEditUserRole(Number(id))
+//		res.status(200).json({ result: response })
+//	} catch (err) {
+//		next(err)
+//	}
+//}
+
+export async function deleteUser(req, res, next) {
 	try {
+		const user = req.user
+		if (user.role !== "SUPER") {
+			createError(403, "only super can do this")
+		}
 		const { id } = req.params
-		const response = serviceEditUserRole(Number(id))
-		res.status(200).json({ message: response })
+		if (user.id === Number(id)) {
+			createError(400, "cannot delete yourself")
+		}
+		const response = await serviceDeleteUser(Number(id))
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function deleteUser(req, res, next) {
+export async function banUser(req, res, next) {
 	try {
+		const user = req.user
+		if (user.role !== "SUPER") {
+			createError(403, "only super can do this")
+		}
 		const { id } = req.params
-		const response = serviceDeleteUser(Number(id))
-		res.status(200).json({ message: response })
+		if (user.id === Number(id)) {
+			createError(400, "cannot ban yourself")
+		}
+		const response = await serviceBanUser(Number(id))
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function banUser(req, res, next) {
+export async function addIngredient(req, res, next) {
 	try {
+		const user = req.user.role
+		if (user.role === "USER") {
+			createError(403, "you don't have permission to do this")
+		}
+		const data = req.body
+		const response = await serviceAddIngredient(data)
+		res.status(200).json({ result: response })
+	} catch (err) {
+		next(err)
+	}
+}
+
+export async function editIngredient(req, res, next) {
+	try {
+		const user = req.user
+		if (user.role === "USER") {
+			createError(403, "you don't have permission to do this")
+		}
+		const data = req.body
 		const { id } = req.params
-		const response = serviceBanUser(Number(id))
-		res.status(200).json({ message: response })
+		const response = await serviceEditIngredient(Number(id), data)
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function addIngredient(req, res, next) {
+export async function deleteIngredient(req, res, next) {
 	try {
-		const response = serviceAddIngredient()
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
-
-export function editIngredient(req, res, next) {
-	try {
+		const user = req.user
+		if (user.role === "USER") {
+			createError(403, "you don't have permission to do this")
+		}
 		const { id } = req.params
-		const response = serviceEditIngredient(Number(id))
-		res.status(200).json({ message: response })
+		const response = await serviceDeleteIngredient(Number(id))
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function deleteIngredient(req, res, next) {
+export async function addEquipment(req, res, next) {
 	try {
+		const user = req.user
+		if (user.role === "USER") {
+			createError(403, "you don't have permission to do this")
+		}
+		const data = req.body
+		const response = await serviceAddEquipment(data)
+		res.status(200).json({ result: response })
+	} catch (err) {
+		next(err)
+	}
+}
+
+export async function editEquipment(req, res, next) {
+	try {
+		const user = req.user
+		if (user.role === "USER") {
+			createError(403, "you don't have permission to do this")
+		}
+		const data = req.body
 		const { id } = req.params
-		const response = serviceDeleteIngredient(Number(id))
-		res.status(200).json({ message: response })
+		const response = await serviceEditEquipment(Number(id), data)
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function addEquipment(req, res, next) {
+export async function deleteEquipment(req, res, next) {
 	try {
-		const response = serviceAddEquipment()
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
-
-export function editEquipment(req, res, next) {
-	try {
+		const user = req.user
+		if (user.role === "USER") {
+			createError(403, "you don't have permission to do this")
+		}
+		const data = req.body
 		const { id } = req.params
-		const response = serviceEditEquipment(Number(id))
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
-
-export function deleteEquipment(req, res, next) {
-	try {
-		const { id } = req.params
-		const response = serviceDeleteEquipment(Number(id))
-		res.status(200).json({ message: response })
+		const response = await serviceDeleteEquipment(Number(id), data)
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}

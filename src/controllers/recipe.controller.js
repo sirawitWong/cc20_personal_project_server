@@ -4,63 +4,81 @@ import {
 	serviceSearchRecipe,
 	serviceDeleteRecipe,
 	serviceEditRecipe,
-	serviceGetRecipeReview
+	serviceGetRecipeReview,
+	serviceCreateRecipe
 } from "../services/recipe.service.js";
 
-export function getAllRecipies(req, res, next) {
+export async function getAllRecipies(req, res, next) {
 	try {
-		const response = serviceGetAllRecipies()
-		res.status(200).json({ message: response })
+		const response = await serviceGetAllRecipies()
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function getRecipeById(req, res, next) {
+export async function getRecipeById(req, res, next) {
 	try {
 		const { id } = req.params
-		const response = serviceGetRecipeById(Number(id))
-		res.status(200).json({ message: response })
+		const response = await serviceGetRecipeById(Number(id))
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function searchRecipe(req, res, next) {
+export async function searchRecipe(req, res, next) {
 	try {
 		const name = req.query.name
 		const category = req.query.category
-		const response = serviceSearchRecipe(name, category)
-		res.status(200).json({ message: response })
+		const response = await serviceSearchRecipe(name, category)
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function deleteRecipe(req, res, next) {
+export async function createRecipe(req, res, next) {
+	try {
+		const user = req.user
+		const body = req.body
+		console.log(body)
+		const response = await serviceCreateRecipe()
+		res.status(200).json({ result: response })
+	} catch (err) {
+		next(err)
+	}
+}
+
+export async function deleteRecipe(req, res, next) {
+	try {
+		const user = req.user
+		const { id } = req.params
+		const response = await serviceDeleteRecipe(Number(id), user)
+		res.status(200).json({ result: response })
+	} catch (err) {
+		next(err)
+	}
+}
+
+export async function editRecipe(req, res, next) {
+	try {
+		const user = req.user
+		const body = req.body
+		console.log(body)
+		const { id } = req.params
+		const response = await serviceEditRecipe(Number(id), user)
+		res.status(200).json({ result: response })
+	} catch (err) {
+		next(err)
+	}
+}
+
+export async function getRecipeReview(req, res, next) {
 	try {
 		const { id } = req.params
-		const response = serviceDeleteRecipe(Number(id))
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
-
-export function editRecipe(req, res, next) {
-	try {
-		const { id } = req.params
-		const response = serviceEditRecipe(Number(id))
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
-
-export function getRecipeReview(req, res, next) {
-	try {
-		const response = serviceGetRecipeReview()
-		res.status(200).json({ message: response })
+		const response = await serviceGetRecipeReview(Number(id))
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}

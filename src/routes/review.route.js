@@ -1,11 +1,12 @@
 import express from "express"
 import { createReview, deleteReview, editReview, getReviewById } from "../controllers/review.controller.js"
+import { authCheck } from "../middlewares/authen.middleware.js"
 
 const router = express.Router()
 
 router.get("/review/:id", getReviewById)
-router.post("/auth/review", createReview)
-router.patch("/auth/review", editReview)
-router.delete("/auth/review/:id", deleteReview)
+router.post("/auth/review", authCheck, createReview)
+router.patch("/auth/review", authCheck, editReview)
+router.delete("/auth/review/:id", authCheck, deleteReview)
 
 export default router

@@ -1,64 +1,71 @@
 import {
 	serviceEditUser,
-	serviceFollow,
-	serviceGetFollower,
-	serviceGetFollowing,
-	serviceGetMe,
-	serviceUnfollow
+	//serviceFollow,
+	//serviceGetFollower,
+	//serviceGetFollowing,
+	//serviceUnfollow
 } from "../services/auth.user.service.js";
 
 import { createError } from "../utils/createError.js";
 
 export function getMe(req, res, next) {
 	try {
-		const response = serviceGetMe()
-		res.status(200).json({ message: response })
+		const user = req.user
+		res.status(200).json({ result: user })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function editUser(req, res, next) {
+export async function editUser(req, res, next) {
 	try {
-		const response = serviceEditUser()
-		res.status(200).json({ message: response })
+		const user = req.user
+		const data = req.body
+		const response = await serviceEditUser(user.id, data)
+		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
 	}
 }
 
-export function getFollower(req, res, next) {
-	try {
-		const response = serviceGetFollower()
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
+//export async function getFollower(req, res, next) {
+//	try {
+//		const user = req.user
+//		const response = await serviceGetFollower()
+//		res.status(200).json({ message: response })
+//	} catch (err) {
+//		next(err)
+//	}
+//}
 
-export function getFollowing(req, res, next) {
-	try {
-		const response = serviceGetFollowing()
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
+//export async function getFollowing(req, res, next) {
+//	try {
+//		const user = req.user
+//		const response = await serviceGetFollowing()
+//		res.status(200).json({ message: response })
+//	} catch (err) {
+//		next(err)
+//	}
+//}
 
-export function follow(req, res, next) {
-	try {
-		const response = serviceFollow()
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
+//export async function follow(req, res, next) {
+//	try {
+//		const user = req.user
+//		const followToId = req.body.id
+//		const response = await serviceFollow(user.id, followToId)
+//		res.status(200).json({ message: response })
+//	} catch (err) {
+//		next(err)
+//	}
+//}
 
-export function unfollow(req, res, next) {
-	try {
-		const response = serviceUnfollow()
-		res.status(200).json({ message: response })
-	} catch (err) {
-		next(err)
-	}
-}
+//export async function unfollow(req, res, next) {
+//	try {
+//		const user = req.user
+//		const followToId = req.body.id
+//		const response = await serviceUnfollow(user.id, followToId)
+//		res.status(200).json({ message: response })
+//	} catch (err) {
+//		next(err)
+//	}
+//}

@@ -1,25 +1,40 @@
 import prisma from "../config/prisma.js";
 
-export function serviceGetMe() {
-	return "get me"
+export async function serviceEditUser(id, data) {
+	//const result = await prisma.user.updateMany({
+	//	where: { id },
+	//	data: { username }
+	//})
+	return data
 }
 
-export function serviceEditUser() {
-	return "edit user"
-}
+//export async function serviceGetFollower(id) {
+//	const result = await prisma.user.findUnique({
+//		where: { id },
+//		include: { follower }
+//	})
+//	return result
+//}
 
-export function serviceGetFollower() {
-	return "get all follower"
-}
+//export async function serviceGetFollowing(id) {
+//	const result = await prisma.user.findUnique({
+//		where: { id },
+//		include: { following }
+//	})
+//	return result
+//}
 
-export function serviceGetFollowing() {
-	return "get following list"
-}
+//export async function serviceFollow(id, toId) {
+//	const result = await prisma.user.update({
+//		where: { id },
+//		data: { following: toId }
+//	})
+//	return result
+//}
 
-export function serviceFollow() {
-	return "follow"
-}
-
-export function serviceUnfollow() {
-	return "unfollow"
-}
+//export async function serviceUnfollow(id, toId) {
+//	const result = await prisma.user.delete({
+//		where: { id }
+//	})
+//	return result
+//}

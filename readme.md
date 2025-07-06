@@ -37,29 +37,56 @@ http://localhost:3033/api/login
 /api/auth/user/follow|PATCH|follow user| Bearer Token| -|-|{id:int}|{}|
 /api/auth/user/follow|DELETE|unfollow user| Bearer Token| -|-|{id:int}|{}|
 
+### test token
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTE1NTIxOTcsImV4cCI6MTc1MjE1Njk5N30.z7RpyrVacHlxeWPArxM6C1uVicJ_L89wkUnvkpDv-ck
+```
+
 #### test getMe
 ```
-curl http://localhost:3033/api/auth/me
+curl -H "Authorization: Bearer <token>" http://localhost:3033/api/auth/me
+```
+```
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTE1NTIxOTcsImV4cCI6MTc1MjE1Njk5N30.z7RpyrVacHlxeWPArxM6C1uVicJ_L89wkUnvkpDv-ck" http://localhost:3033/api/auth/me
 ```
 #### test edit user
 ```
-curl -X PATCH http://localhost:3033/api/auth/user
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"username":"test"}' \
+http://localhost:3033/api/auth/user
+```
+```
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTE1NTIxOTcsImV4cCI6MTc1MjE1Njk5N30.z7RpyrVacHlxeWPArxM6C1uVicJ_L89wkUnvkpDv-ck' \
+-d '{"username":"test"}' \
+http://localhost:3033/api/auth/user
 ```
 #### test get follower
 ```
-curl http://localhost:3033/api/auth/user/follower
+curl -H "Authorization: Bearer <token>" http://localhost:3033/api/auth/user/follower
 ```
 #### test get following
 ```
-curl http://localhost:3033/api/auth/user/following
+curl -H "Authorization: Bearer <token>" http://localhost:3033/api/auth/user/following
 ```
 #### test follow
 ```
-curl -X PATCH http://localhost:3033/api/auth/user/follow
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/user/follow
 ```
 #### test unfollow
 ```
-curl -X DELETE http://localhost:3033/api/auth/user/follow
+curl -X DELETE \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/user/follow
 ```
 
 ---
@@ -70,7 +97,7 @@ curl -X DELETE http://localhost:3033/api/auth/user/follow
 /api/auth/admin/role/:id|PATCH|edit user role|Bearer Token (super only)|id|-|{role:"enum"}|{message:"success"}
 /api/auth/admin/delete/user/:id|DELETE|delete user|Bearer Token(super only)|id|-|-|{message:"DELETED"}
 /api/auth/admin/ban/:id|PATCH|ban/unban user|Bearer Token (super only)|id|-|{userStatus: "enum"}|{message:"BANNED"}|
-/api/auth/admin/add/ingredient|POST|add new ingredient| Bearer Token (admin, super)|-|-|{name:"string", image:"string", protein:float, cabohydrate:float, fat:float}|{message:"CREATED"}|
+/api/auth/admin/add/ingredient|POST|add new ingredient| Bearer Token (admin, super)|-|-|{name:"string", image:"string?", protein:float, cabohydrate:float, fat:float}|{message:"CREATED"}|
 /api/auth/admin/edit/ingredient/:id|PATCH|edit ingredient| Bearer Token (admin, super)|id|-|{name:"string", image:"string", protein:float, cabohydrate:float, fat:float}|{message:"EDITED"}|
 /api/auth/admin/delete/ingredient/:id|DELETE|delete ingredient| Bearer Token (admin, super)|id|-|{name:"string", image:"string", protein:float, cabohydrate:float, fat:float}|{message:"DELETED"}|
 /api/auth/admin/add/equipment|POST|add new equipment| Bearer Token (admin, super)|-|-|{name:"string", image: "string"}|{message:"CREATED"}
@@ -81,43 +108,83 @@ curl -X DELETE http://localhost:3033/api/auth/user/follow
 
 #### test register admin
 ```
-curl -X POST http://localhost:3033/api/auth/admin/register
+curl -X POST \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"firstName": "admin","lastName": "admin","username": "admin", "password": "123456","confirmPassword": "123456" }' \
+http://localhost:3033/api/auth/admin/register
 ```
 #### test edit user role
 ```
-curl -X PATCH http://localhost:3033/api/auth/admin/role/1
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/role/1
 ```
 #### test delete user
 ```
-curl -X DELETE http://localhost:3033/api/auth/admin/delete/user/1
+curl -X DELETE \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/delete/user/1
 ```
 #### test ban/unban user
 ```
-curl -X PATCH http://localhost:3033/api/auth/admin/ban/1
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/ban/1
 ```
 #### test add new ingredient
 ```
-curl -X POST http://localhost:3033/api/auth/admin/add/ingredient
+curl -X POST \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/add/ingredient
 ```
 #### test edit ingredient
 ```
-curl -X PATCH http://localhost:3033/api/auth/admin/edit/ingredient/1
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/edit/ingredient/1
 ```
 #### test delete ingredient
 ```
-curl -X DELETE http://localhost:3033/api/auth/admin/delete/ingredient/1
+curl -X DELETE 
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/delete/ingredient/1
 ```
 #### test add new equipment
 ```
-curl -X POST http://localhost:3033/api/auth/admin/add/equipment
+curl -X POST \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/add/equipment
 ```
 #### test edit ingredient
 ```
-curl -X PATCH http://localhost:3033/api/auth/admin/edit/equipment/1
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/edit/equipment/1
 ```
 #### test delete ingredient
 ```
-curl -X DELETE http://localhost:3033/api/auth/admin/delete/equipment/1
+curl -X DELETE \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/admin/delete/equipment/1
 ```
 
 ---
@@ -128,9 +195,10 @@ curl -X DELETE http://localhost:3033/api/auth/admin/delete/equipment/1
 /api/recipies|GET| view all recipe|-|-|-|-|{result:[recipe:"string"]}
 /api/recipe/:id|GET|get recipe by id| -|recipe id|-|-|{result:{recipe:"string"}}
 /api/recipe/search?|GET|search recipe|-|-|caterory, search|-|{result:{recipe:"string"}}
+/api/auth/recipe|POST|create new recipe|Bearer Token|-|-|{}|{}|
 /api/auth/recipe/:id|DELETE|delete recipe|Bearer Token (user, admin)|id|-|-|{message:"DELETED"}
 /api/auth/recipe/:id|PATCH|edit recipe|Bearer Token|id|-|{name:"string", category:"enum", ingredient:int(id), equipment:int(id), instruction: "string", serving: int, image:"string"}|{message:"EDITED"}
-/api/recipe/reviews|GET|get all review of this recipe|-|-|-|-|{result:{review:{}}}
+/api/reviews/recipe|GET|get all review of this recipe|-|-|-|-|{result:{review:{}}}
 
 
 #### test get all recipe
@@ -145,17 +213,35 @@ curl http://localhost:3033/api/recipe/1
 ```
 curl http://localhost:3033/api/search/recipe\?name=potato\&category=main
 ```
+
+#### test create recipe
+```
+curl -X POST \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/recipe/
+```
+
 #### test delete recipe
 ```
-curl -X DELETE http://localhost:3033/api/auth/recipe/1
+curl -X DELETE \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/recipe/1
 ```
 #### test edit recipe
 ```
-curl -X PATCH http://localhost:3033/api/auth/recipe/1
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/recipe/1
 ```
 #### test get review of this recipe
 ```
-curl http://localhost:3033/api/reviews/recipe
+curl http://localhost:3033/api/reviews/recipe/1
 ```
 
 ---
@@ -174,17 +260,29 @@ curl http://localhost:3033/api/review/1
 
 #### test create review
 ```
-curl -X POST http://localhost:3033/api/auth/review/
+curl -X POST \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/review/
 ```
 
 #### test edit review
 ```
-curl -X PATCH http://localhost:3033/api/auth/review/
+curl -X PATCH \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/review/
 ```
 
 #### test delete review
 ```
-curl -X DELETE http://localhost:3033/api/auth/review/1
+curl -X DELETE \
+-H 'Content-Type:application/json' \
+-H 'Authorization: Bearer <token>' \
+-d '{"id": 1}' \
+http://localhost:3033/api/auth/review/1
 ```
 
 ---

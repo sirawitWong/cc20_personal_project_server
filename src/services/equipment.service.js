@@ -1,13 +1,20 @@
 import prisma from "../config/prisma.js"
 
-export function serviceGetAllEquipment() {
-	return "service get all equipment"
+export async function serviceGetAllEquipment() {
+	const result = await prisma.equipment.findMany()
+	return result
 }
 
-export function serviceGetEquipmentById(id) {
-	return `service get all equipment ${id}`
+export async function serviceGetEquipmentById(id) {
+	const result = await prisma.equipment.findUnique({
+		where: { id }
+	})
+	return result
 }
 
-export function serviceSearchEquipment(name) {
-	return `search equipment ${name}`
+export async function serviceSearchEquipment(name) {
+	const result = await prisma.equipment.findMany({
+		where: { name: { startsWith: name } }
+	})
+	return result
 }
