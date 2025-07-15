@@ -13,12 +13,15 @@ export async function serviceCreateReview(data) {
 	return result
 }
 
-export async function serviceEditReview(id, data) {
-	const isExist = await prisma.review.findUnique({
+export async function serviceEditReview(id, userId, data) {
+	const review = await prisma.review.findUnique({
 		where: { id }
 	})
-	if (!isExist) {
+	if (!review) {
 		return createError(400, "review doesn't exist")
+	}
+	if (review.userId !== userId) {
+		return createError(400, "you can only edit your own review")
 	}
 	const result = await prisma.review.update({
 		where: { id },
@@ -28,11 +31,14 @@ export async function serviceEditReview(id, data) {
 }
 
 export async function serviceDeleteReview(id) {
-	const isExist = await prisma.review.findUnique({
+	const review = await prisma.review.findUnique({
 		where: { id }
 	})
-	if (!isExist) {
+	if (!review) {
 		return createError(400, "review doesn't exist")
+	}
+	if (review.userId !== userId) {
+		return createError(400, "you can only edit your own review")
 	}
 	await prisma.review.delete({
 		where: { id }

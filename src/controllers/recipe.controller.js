@@ -42,8 +42,8 @@ export async function createRecipe(req, res, next) {
 	try {
 		const user = req.user
 		const body = req.body
-		console.log(body)
-		const response = await serviceCreateRecipe()
+		body.userId = user.id
+		const response = await serviceCreateRecipe(body)
 		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
@@ -54,7 +54,7 @@ export async function deleteRecipe(req, res, next) {
 	try {
 		const user = req.user
 		const { id } = req.params
-		const response = await serviceDeleteRecipe(Number(id), user)
+		const response = await serviceDeleteRecipe(Number(id), user.id)
 		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)
@@ -65,9 +65,8 @@ export async function editRecipe(req, res, next) {
 	try {
 		const user = req.user
 		const body = req.body
-		console.log(body)
 		const { id } = req.params
-		const response = await serviceEditRecipe(Number(id), user)
+		const response = await serviceEditRecipe(Number(id), user.id, body)
 		res.status(200).json({ result: response })
 	} catch (err) {
 		next(err)

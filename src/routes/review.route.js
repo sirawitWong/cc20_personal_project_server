@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get("/review/:id", getReviewById)
 router.post("/auth/review", authCheck, createReview)
-router.patch("/auth/review", authCheck, editReview)
+router.patch("/auth/review/:id", authCheck, editReview)
 router.delete("/auth/review/:id", authCheck, deleteReview)
 
 export default router

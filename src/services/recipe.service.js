@@ -36,16 +36,20 @@ export async function serviceSearchRecipe(name, category) {
 }
 
 // later
-export async function serviceCreateRecipe() {
-	return `create recipe `
+export async function serviceCreateRecipe(data) {
+	const result = await prisma.recipe.create({ data })
+	return result
 }
 
-export async function serviceDeleteRecipe(id, user) {
-	const isExist = await prisma.recipe.findUnique({
+export async function serviceDeleteRecipe(id, userId) {
+	const recipe = await prisma.recipe.findUnique({
 		where: { id }
 	})
-	if (!isExist) {
-		createError(400, "this recipe doesn't exist")
+	if (!recipe) {
+		return createError(400, "this recipe doesn't exist")
+	}
+	if (recipe.userId !== userId) {
+		return createError(400, "you can only delete your own recipe")
 	}
 	await prisma.recipe.delete({
 		where: { id }
@@ -54,20 +58,23 @@ export async function serviceDeleteRecipe(id, user) {
 }
 
 // later
-export async function serviceEditRecipe(id, user, data) {
-	const isExist = await prisma.recipe.findUnique({
+export async function serviceEditRecipe(id, userId, data) {
+	const recipe = await prisma.recipe.findUnique({
 		where: { id }
 	})
-	if (!isExist) {
-		createError(400, "this recipe doesn't exist")
+	if (!recipe) {
+		return createError(400, "this recipe doesn't exist")
 	}
-	const result = data
+	if (recipe.userId !== userId) {
+		return createError(400, "you can only delete your own recipe")
+	}
+	const result = await prisma.recipe.update({ where: { id }, data })
 	return result
 }
 
 export async function serviceGetRecipeReview(id) {
-	const recipe = await prisma.recipe.findUnique({
-		where: { id }
+	const recipe = await prisma.review.findMany({
+		where: { recipeId: id }
 	})
 	return recipe
 }

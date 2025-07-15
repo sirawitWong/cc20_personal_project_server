@@ -1,5 +1,6 @@
 import {
 	serviceEditUser,
+	serviceGetMe,
 	//serviceFollow,
 	//serviceGetFollower,
 	//serviceGetFollowing,
@@ -8,10 +9,11 @@ import {
 
 import { createError } from "../utils/createError.js";
 
-export function getMe(req, res, next) {
+export async function getMe(req, res, next) {
 	try {
 		const user = req.user
-		res.status(200).json({ result: user })
+		const result = await serviceGetMe(user.id)
+		res.status(200).json({ result })
 	} catch (err) {
 		next(err)
 	}

@@ -7,8 +7,8 @@ import {
 	serviceDeleteUser,
 	serviceEditEquipment,
 	serviceEditIngredient,
-	//serviceEditUserRole,
-	serviceRegisterAdmin
+	serviceRegisterAdmin,
+	serviceGetAllUsers
 } from "../services/auth.admin.service.js";
 
 import { createError } from "../utils/createError.js";
@@ -27,21 +27,18 @@ export async function registerAdmin(req, res, next) {
 	}
 }
 
-//export async function editUserRole(req, res, next) {
-//	try {
-//		const user = req.user
-//if (user.role !== "SUPER") {
-//	createError(403, "only super can do this")
-//}
-//		const body = req.body
-//		console.log(body)
-//		const { id } = req.params
-//		const response = await serviceEditUserRole(Number(id))
-//		res.status(200).json({ result: response })
-//	} catch (err) {
-//		next(err)
-//	}
-//}
+export async function getAllUsers(req, res, next) {
+	try {
+		const user = req.user
+		if (user.role !== "SUPER") {
+			createError(403, "only super can do this")
+		}
+		const response = await serviceGetAllUsers()
+		res.status(200).json({ result: response })
+	} catch (err) {
+		next(err)
+	}
+}
 
 export async function deleteUser(req, res, next) {
 	try {
@@ -79,8 +76,9 @@ export async function banUser(req, res, next) {
 
 export async function addIngredient(req, res, next) {
 	try {
-		const user = req.user.role
-		if (user.role === "USER") {
+		const allow = ["ADMIN", "SUPER"]
+		const role = req.user.role
+		if (!allow.includes(role)) {
 			createError(403, "you don't have permission to do this")
 		}
 		const data = req.body
@@ -93,8 +91,9 @@ export async function addIngredient(req, res, next) {
 
 export async function editIngredient(req, res, next) {
 	try {
-		const user = req.user
-		if (user.role === "USER") {
+		const allow = ["ADMIN", "SUPER"]
+		const role = req.user.role
+		if (!allow.includes(role)) {
 			createError(403, "you don't have permission to do this")
 		}
 		const data = req.body
@@ -108,8 +107,9 @@ export async function editIngredient(req, res, next) {
 
 export async function deleteIngredient(req, res, next) {
 	try {
-		const user = req.user
-		if (user.role === "USER") {
+		const allow = ["ADMIN", "SUPER"]
+		const role = req.user.role
+		if (!allow.includes(role)) {
 			createError(403, "you don't have permission to do this")
 		}
 		const { id } = req.params
@@ -122,8 +122,9 @@ export async function deleteIngredient(req, res, next) {
 
 export async function addEquipment(req, res, next) {
 	try {
-		const user = req.user
-		if (user.role === "USER") {
+		const allow = ["ADMIN", "SUPER"]
+		const role = req.user.role
+		if (!allow.includes(role)) {
 			createError(403, "you don't have permission to do this")
 		}
 		const data = req.body
@@ -136,8 +137,9 @@ export async function addEquipment(req, res, next) {
 
 export async function editEquipment(req, res, next) {
 	try {
-		const user = req.user
-		if (user.role === "USER") {
+		const allow = ["ADMIN", "SUPER"]
+		const role = req.user.role
+		if (!allow.includes(role)) {
 			createError(403, "you don't have permission to do this")
 		}
 		const data = req.body
@@ -151,8 +153,9 @@ export async function editEquipment(req, res, next) {
 
 export async function deleteEquipment(req, res, next) {
 	try {
-		const user = req.user
-		if (user.role === "USER") {
+		const allow = ["ADMIN", "SUPER"]
+		const role = req.user.role
+		if (!allow.includes(role)) {
 			createError(403, "you don't have permission to do this")
 		}
 		const data = req.body

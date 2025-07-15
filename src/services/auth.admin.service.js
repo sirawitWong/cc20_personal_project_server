@@ -16,9 +16,10 @@ export async function serviceRegisterAdmin(firstName, lastName, username, passwo
 	return result
 }
 
-//export async function serviceEditUserRole(id) {
-//	return `edit role ${id}`
-//}
+export async function serviceGetAllUsers() {
+	const result = await prisma.user.findMany({ omit: { password: true } })
+	return result
+}
 
 export async function serviceDeleteUser(id) {
 	const isExist = await prisma.user.findUnique({

@@ -14,7 +14,11 @@ const app = express();
 const PORT = process.env.PORT || 3033;
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+	origin: true,
+	methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+	allowedHeaders: ['Content-Type', 'Authorization'],
+}))
 
 app.use("/api", publicRouter)
 app.use("/api", authUserRouter)

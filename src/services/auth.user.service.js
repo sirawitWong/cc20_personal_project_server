@@ -1,5 +1,13 @@
 import prisma from "../config/prisma.js";
 
+export async function serviceGetMe(id) {
+	const result = await prisma.user.findUnique({
+		where: { id },
+		omit: { password: true }
+	})
+	return result
+}
+
 export async function serviceEditUser(id, data) {
 	//const result = await prisma.user.updateMany({
 	//	where: { id },
