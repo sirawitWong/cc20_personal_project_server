@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.js";
+import { createError } from "../utils/createError.js";
 
 export async function serviceGetMe(id) {
 	const result = await prisma.user.findUnique({
@@ -9,11 +10,15 @@ export async function serviceGetMe(id) {
 }
 
 export async function serviceEditUser(id, data) {
-	//const result = await prisma.user.updateMany({
-	//	where: { id },
-	//	data: { username }
-	//})
-	return data
+	const user = await prisma.user.findUnique({ where: { id } })
+	if (!user) {
+		return createError(400, "this user doesn't exist")
+	}
+	const result = await prisma.user.updateMany({
+		where: { id },
+		data
+	})
+	return result
 }
 
 //export async function serviceGetFollower(id) {
